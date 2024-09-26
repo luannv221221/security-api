@@ -27,12 +27,14 @@ public class SecurityConfig {
     private JwtEntryPoint jwtEntryPoint;
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable).
+        return httpSecurity.
+                csrf(AbstractHttpConfigurer::disable).
                 authenticationProvider(authenticationProvider()).
                 authorizeHttpRequests((auth)->{
-                    auth.requestMatchers("/api/v1/**").permitAll();
-                    auth.requestMatchers("/api/v1/admin").hasAuthority("ADMIN");
-                    auth.anyRequest().authenticated();
+                   auth.requestMatchers("/api/v1/auth/**").permitAll().
+                           requestMatchers("/api/v1/admin").hasAuthority("ADMIN").
+                           anyRequest().permitAll();
+
                 }).sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 exceptionHandling(auth->auth.authenticationEntryPoint(jwtEntryPoint)).
                 addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class).build();

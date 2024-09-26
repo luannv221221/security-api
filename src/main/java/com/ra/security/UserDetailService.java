@@ -27,6 +27,6 @@ public class UserDetailService implements UserDetailsService {
                 ).collect(Collectors.toSet())
         );
 
-        return null;
+        return userPrinciple;
     }
 }

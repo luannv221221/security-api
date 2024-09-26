@@ -23,6 +23,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
+
         if(token != null && jwtProvider.validateToken(token)){
             String userName = jwtProvider.getUserNameFromToken(token);
             UserDetails userDetails = userDetailService.loadUserByUsername(userName);
@@ -33,6 +34,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
+        filterChain.doFilter(request,response);
     }
 
     // lay toekn gửi lên từ request
