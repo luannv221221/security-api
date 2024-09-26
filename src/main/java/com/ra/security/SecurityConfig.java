@@ -33,7 +33,7 @@ public class SecurityConfig {
                 authorizeHttpRequests((auth)->{
                    auth.requestMatchers("/api/v1/auth/**").permitAll().
                            requestMatchers("/api/v1/admin").hasAuthority("ADMIN").
-                           anyRequest().permitAll();
+                           anyRequest().authenticated();
 
                 }).sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 exceptionHandling(auth->auth.authenticationEntryPoint(jwtEntryPoint)).
