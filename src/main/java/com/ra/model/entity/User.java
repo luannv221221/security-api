@@ -17,6 +17,7 @@ public class User {
     private Long id;
     @Column(unique = true,length = 100)
     private String userName;
+    private String fullName;
     private String password;
     private Boolean status;
     @ManyToMany(fetch = FetchType.EAGER)

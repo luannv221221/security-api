@@ -1,6 +1,7 @@
 package com.ra.controller;
 
 import com.ra.model.dto.UserLoginDTO;
+import com.ra.model.dto.UserRegisterDTO;
 import com.ra.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,5 +21,9 @@ public class AuthController {
 
         return new ResponseEntity<>(authService.login(userLoginDTO), HttpStatus.OK);
 
+    }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserRegisterDTO userRegisterDTO){
+        return new ResponseEntity<>(authService.register(userRegisterDTO),HttpStatus.CREATED);
     }
 }
