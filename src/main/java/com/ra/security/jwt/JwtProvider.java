@@ -24,7 +24,7 @@ public class JwtProvider {
         Date dateExpiration = new Date(new Date().getTime()+EXPIRED);
         return Jwts.builder()
                 .setSubject(userPrinciple.getUsername())
-                .signWith(SignatureAlgorithm.ES512,SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS512,SECRET_KEY)
                 .setExpiration(dateExpiration).compact();
     }
 

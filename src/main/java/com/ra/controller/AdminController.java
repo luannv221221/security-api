@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> index(){
         return new ResponseEntity<>("Ddat la amin", HttpStatus.OK);
     }

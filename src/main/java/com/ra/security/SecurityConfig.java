@@ -31,16 +31,17 @@ public class SecurityConfig {
                 csrf(AbstractHttpConfigurer::disable).
                 authenticationProvider(authenticationProvider()).
                 authorizeHttpRequests((auth)->{
-                   auth.requestMatchers("/api/v1/auth/**").permitAll().
-                           requestMatchers("/api/v1/admin").hasAuthority("ADMIN").
-                           anyRequest().authenticated();
-
+                   auth.requestMatchers("/api/v1/auth/**").permitAll();
+                   auth.requestMatchers("/api/v1/admin").hasAuthority("ADMIN");
+                   auth.anyRequest().authenticated();
                 }).sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 exceptionHandling(auth->auth.authenticationEntryPoint(jwtEntryPoint)).
-                addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class).build();
+                addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
