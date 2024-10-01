@@ -1,9 +1,6 @@
 package com.ra.service.auth;
 
-import com.ra.model.dto.UserLoginDTO;
-import com.ra.model.dto.UserRegisterDTO;
-import com.ra.model.dto.UserRegisterResponseDTO;
-import com.ra.model.dto.UserResponseDTO;
+import com.ra.model.dto.*;
 import com.ra.model.entity.Role;
 import com.ra.model.entity.User;
 import com.ra.repository.RoleRepository;
@@ -18,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -54,12 +52,41 @@ public class AuthServiceImp implements AuthService{
                 fullName(userRegisterDTO.getFullName())
                 .userName(userRegisterDTO.getUserName())
                 .password(new BCryptPasswordEncoder().encode(userRegisterDTO.getPassword())).
-                status(true).roles(roles)
+                status(true)
+                .roles(roles)
                 .build();
         User userNew = userRepository.save(user);
         return UserRegisterResponseDTO.builder().
                 fullName(userNew.getFullName()).
                 userName(userNew.getUserName())
+                .build();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public UserResponseDTO creatAccount(AccountRequestDTO accountRequestDTO) {
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : accountRequestDTO.getRoleName()) {
+            Role role = roleRepository.findRoleByRoleName(roleName);
+            roles.add(role);
+        }
+        User user = User.builder()
+                .userName(accountRequestDTO.getUserName())
+                .fullName(accountRequestDTO.getFullName())
+                .password(new BCryptPasswordEncoder().encode(accountRequestDTO.getPassword()))
+                .roles(roles)
+                .status(true)
+                .build();
+
+        User userNew = userRepository.save(user);
+
+        return UserResponseDTO.builder()
+                .userName(userNew.getUserName())
+                .roles(userNew.getRoles())
                 .build();
     }
 }

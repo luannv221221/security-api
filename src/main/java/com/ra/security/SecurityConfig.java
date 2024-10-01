@@ -1,5 +1,6 @@
 package com.ra.security;
 
+import com.ra.security.jwt.CustomAccessDeniedHandler;
 import com.ra.security.jwt.JwtAuthTokenFilter;
 import com.ra.security.jwt.JwtEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class SecurityConfig {
     private JwtAuthTokenFilter jwtAuthTokenFilter;
     @Autowired
     private JwtEntryPoint jwtEntryPoint;
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.
@@ -33,9 +36,14 @@ public class SecurityConfig {
                 authorizeHttpRequests((auth)->{
                    auth.requestMatchers("/api/v1/auth/**").permitAll();
                    auth.requestMatchers("/api/v1/admin").hasAuthority("ADMIN");
+                   auth.requestMatchers("/api/v1/admin/account").hasAuthority("ADMIN");
+                    auth.requestMatchers("/api/v1/admin/category").hasAnyAuthority("ADMIN","SUB_ADMIN");
                    auth.anyRequest().authenticated();
                 }).sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
-                exceptionHandling(auth->auth.authenticationEntryPoint(jwtEntryPoint)).
+                exceptionHandling(
+                        auth->auth.authenticationEntryPoint(jwtEntryPoint).
+                                accessDeniedHandler(customAccessDeniedHandler)
+                ).
                 addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

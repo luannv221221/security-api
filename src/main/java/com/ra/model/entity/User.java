@@ -19,7 +19,7 @@ public class User {
     private String userName;
     private String fullName;
     private String password;
-    private Boolean status;
+    private Boolean status = true;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

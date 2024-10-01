@@ -1,12 +1,13 @@
 package com.ra.service.auth;
 
-import com.ra.model.dto.UserLoginDTO;
-import com.ra.model.dto.UserRegisterDTO;
-import com.ra.model.dto.UserRegisterResponseDTO;
-import com.ra.model.dto.UserResponseDTO;
+import com.ra.model.dto.*;
+import com.ra.model.entity.User;
+
+import java.util.List;
 
 public interface AuthService {
     UserResponseDTO login(UserLoginDTO userLoginDTO);
-
     UserRegisterResponseDTO register(UserRegisterDTO userRegisterDTO);
+    List<User> findAll();
+    UserResponseDTO creatAccount(AccountRequestDTO accountRequestDTO);
 }
