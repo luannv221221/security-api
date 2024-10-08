@@ -36,7 +36,7 @@ public class SecurityConfig  {
                 csrf(AbstractHttpConfigurer::disable).
                 authenticationProvider(authenticationProvider()).
                 authorizeHttpRequests((auth)->{
-                   auth.requestMatchers("/api/v1/auth/**").permitAll();
+                   auth.requestMatchers("/api/v1/auth/**","/api/v1/upload").permitAll();
                    auth.requestMatchers("/api/v1/admin").hasAuthority("ADMIN");
                    auth.requestMatchers("/api/v1/admin/account").hasAuthority("ADMIN");
                    auth.requestMatchers("/api/v1/admin/category").hasAnyAuthority("ADMIN","SUB_ADMIN");
