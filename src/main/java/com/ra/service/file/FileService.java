@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 public class FileService {
-    private static final String bucketName = "pt04-upload.appspot.com";
+    private static final String bucketName = "okok-private.appspot.com";
     @Autowired
     private ServletContext servletContext;
     @Autowired
