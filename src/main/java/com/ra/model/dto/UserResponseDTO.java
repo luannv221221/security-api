@@ -3,6 +3,7 @@ package com.ra.model.dto;
 import com.ra.model.entity.Role;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -10,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class UserResponseDTO {
+public class UserResponseDTO implements Serializable {
     private String userName;
     private String token;
     private String typeToken;

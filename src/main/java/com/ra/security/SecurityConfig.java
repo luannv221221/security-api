@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+//@EnableMethodSecurity
 public class SecurityConfig  {
     @Autowired
     private UserDetailService userDetailService;
@@ -36,10 +36,12 @@ public class SecurityConfig  {
                 csrf(AbstractHttpConfigurer::disable).
                 authenticationProvider(authenticationProvider()).
                 authorizeHttpRequests((auth)->{
-                   auth.requestMatchers("/api/v1/auth/**","/api/v1/upload").permitAll();
-                   auth.requestMatchers("/api/v1/admin").hasAuthority("ADMIN");
+
+                   auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");
                    auth.requestMatchers("/api/v1/admin/account").hasAuthority("ADMIN");
-                   auth.requestMatchers("/api/v1/admin/category,/api/v1/admin/blog").hasAnyAuthority("ADMIN","SUB_ADMIN");
+                   auth.requestMatchers("/api/v1/admin/category").hasAnyAuthority("ADMIN","SUB_ADMIN");
+                   auth.requestMatchers("/api/v1/admin/blog").hasAnyAuthority("ADMIN","SUB_ADMIN");
+                    auth.requestMatchers("/api/v1/auth/**","/api/v1/upload","/**").permitAll();
                    auth.anyRequest().authenticated();
                 }).sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 exceptionHandling(

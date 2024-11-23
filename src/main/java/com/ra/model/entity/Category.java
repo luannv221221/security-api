@@ -1,7 +1,10 @@
 package com.ra.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,4 +23,7 @@ public class Category {
     private String description;
     @Column(name = "status")
     private Boolean status;
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore()
+    private Set<Product> products;
 }
