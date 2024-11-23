@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -33,10 +36,20 @@ public class SecurityConfig  {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.
+                cors(cf -> cf.configurationSource(request ->
+                {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:5173")); // phụ thuộc vào port clents
+                    config.setAllowedMethods(List.of("*"));
+                    config.setAllowCredentials(true);
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setExposedHeaders(List.of("*"));
+                    return config;
+                })
+                ).
                 csrf(AbstractHttpConfigurer::disable).
                 authenticationProvider(authenticationProvider()).
                 authorizeHttpRequests((auth)->{
-
                    auth.requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN");
                    auth.requestMatchers("/api/v1/admin/account").hasAuthority("ADMIN");
                    auth.requestMatchers("/api/v1/admin/category").hasAnyAuthority("ADMIN","SUB_ADMIN");
@@ -48,7 +61,7 @@ public class SecurityConfig  {
                         auth->auth.authenticationEntryPoint(jwtEntryPoint).
                                 accessDeniedHandler(customAccessDeniedHandler)
                 ).
-                addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                addFilterAfter(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     @Bean
